@@ -23,7 +23,10 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CodeTitleBar(language: language),
+          _CodeTitleBar(
+            language: language,
+            code: element.textContent.trimRight(),
+          ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: HighlightView(
@@ -44,10 +47,26 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
   }
 }
 
-class _CodeTitleBar extends StatelessWidget {
-  const _CodeTitleBar({required this.language});
+class _CodeTitleBar extends StatefulWidget {
+  const _CodeTitleBar({required this.language, required this.code});
 
   final String language;
+  final String code;
+
+  @override
+  State<_CodeTitleBar> createState() => _CodeTitleBarState();
+}
+
+class _CodeTitleBarState extends State<_CodeTitleBar> {
+  bool _copied = false;
+
+  void _copy() {
+    Clipboard.setData(ClipboardData(text: widget.code));
+    setState(() => _copied = true);
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _copied = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,17 +83,55 @@ class _CodeTitleBar extends StatelessWidget {
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-              color: _langColor(language),
+              color: _langColor(widget.language),
               shape: BoxShape.circle,
             ),
           ),
           const SizedBox(width: 8),
           Text(
-            language,
+            widget.language,
             style: const TextStyle(
               color: Color(0xFF858585),
               fontSize: 12,
               fontFamily: 'JetBrains Mono',
+            ),
+          ),
+          const Spacer(),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: _copy,
+              borderRadius: BorderRadius.circular(4),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: Row(
+                    key: ValueKey(_copied),
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _copied ? Icons.check_rounded : Icons.copy_all_rounded,
+                        size: 14,
+                        color: _copied
+                            ? const Color(0xFF89E051)
+                            : const Color(0xFF858585),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _copied ? 'Copied!' : 'Copy',
+                        style: TextStyle(
+                          color: _copied
+                              ? const Color(0xFF89E051)
+                              : const Color(0xFF858585),
+                          fontSize: 11,
+                          fontFamily: 'JetBrains Mono',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ],
