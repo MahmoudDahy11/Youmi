@@ -243,9 +243,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 **Mahmoud Dahy** - Senior Software Engineer
 
-GitHub: [@mahmoud-dahy](https://github.com/mahmoud-dahy)
+GitHub: [@mahmoud-dahy](https://github.com/MahmoudDahy11)
 
-Project Link: [https://github.com/mahmoud-dahy/youmi](https://github.com/mahmoud-dahy/youmi)
+Project Link: [https://github.com/MahmoudDahy11/Youmi](https://github.com/MahmoudDahy11/Youmi)
 
 ---
 
