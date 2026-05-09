@@ -1,30 +1,38 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-// import 'package:youmi/main.dart';
+import 'package:isar/isar.dart';
+import 'package:youmi/features/tasks/data/models/task_model.dart';
+import 'package:youmi/features/tasks/domain/entities/task.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    // await tester.pumpWidget(const Youmi());
+  group('TaskModel.fromEntity', () {
+    test('uses Isar auto-increment id for new tasks', () {
+      final task = Task(
+        id: 0,
+        title: 'Plan the day',
+        scheduledDate: DateTime(2026, 5, 9),
+        status: TaskStatus.pending,
+        isFlexible: true,
+        createdAt: DateTime(2026, 5, 9, 9),
+      );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      final model = TaskModel.fromEntity(task);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      expect(model.id, Isar.autoIncrement);
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    test('keeps the existing id when updating a task', () {
+      final task = Task(
+        id: 42,
+        title: 'Plan the day',
+        scheduledDate: DateTime(2026, 5, 9),
+        status: TaskStatus.inProgress,
+        isFlexible: false,
+        createdAt: DateTime(2026, 5, 9, 9),
+      );
+
+      final model = TaskModel.fromEntity(task);
+
+      expect(model.id, 42);
+    });
   });
 }

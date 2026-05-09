@@ -32,14 +32,16 @@ class _WeeklyViewState extends State<WeeklyView> {
   }
 
   void _changeWeek(int days) {
-    setState(() => _currentWeekStart = _currentWeekStart.add(Duration(days: days)));
+    setState(
+        () => _currentWeekStart = _currentWeekStart.add(Duration(days: days)));
     _loadWeeklyTasks();
   }
 
   @override
   Widget build(BuildContext context) {
     final weekEnd = _currentWeekStart.add(const Duration(days: 6));
-    final weekRange = '${DateFormat('MMM d').format(_currentWeekStart)} - ${DateFormat('MMM d').format(weekEnd)}';
+    final weekRange =
+        '${DateFormat('MMM d').format(_currentWeekStart)} - ${DateFormat('MMM d').format(weekEnd)}';
 
     return Scaffold(
       appBar: AppBar(
@@ -49,11 +51,17 @@ class _WeeklyViewState extends State<WeeklyView> {
       body: BlocConsumer<TaskCubit, TaskState>(
         listener: _listener,
         builder: (context, state) {
-          if (state is TaskLoading) return const Center(child: CircularProgressIndicator());
-          if (state is WeeklyTasksLoaded) {
-            return _WeeklyList(weekStart: _currentWeekStart, tasks: state.weeklyTasks);
+          if (state is TaskLoading) {
+            return const Center(child: CircularProgressIndicator());
           }
-          if (state is TaskError) return TaskErrorView(message: state.message, onRetry: _loadWeeklyTasks);
+          if (state is WeeklyTasksLoaded) {
+            return _WeeklyList(
+                weekStart: _currentWeekStart, tasks: state.weeklyTasks);
+          }
+          if (state is TaskError) {
+            return TaskErrorView(
+                message: state.message, onRetry: _loadWeeklyTasks);
+          }
           return const SizedBox.shrink();
         },
       ),
@@ -61,14 +69,20 @@ class _WeeklyViewState extends State<WeeklyView> {
   }
 
   List<Widget> _buildActions() => [
-    IconButton(onPressed: () => _changeWeek(-7), icon: const Icon(Icons.chevron_left)),
-    IconButton(onPressed: () => _changeWeek(7), icon: const Icon(Icons.chevron_right)),
-    IconButton(onPressed: _loadWeeklyTasks, icon: const Icon(Icons.refresh)),
-  ];
+        IconButton(
+            onPressed: () => _changeWeek(-7),
+            icon: const Icon(Icons.chevron_left)),
+        IconButton(
+            onPressed: () => _changeWeek(7),
+            icon: const Icon(Icons.chevron_right)),
+        IconButton(
+            onPressed: _loadWeeklyTasks, icon: const Icon(Icons.refresh)),
+      ];
 
   void _listener(BuildContext context, TaskState state) {
     if (state is TaskError) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message), backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(state.message), backgroundColor: Colors.red));
     }
   }
 }
@@ -82,7 +96,11 @@ class _WeeklyHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Weekly Plan'),
-        Text(range, style: TextStyle(fontSize: 13.0, color: Colors.grey.shade600, fontWeight: FontWeight.w400)),
+        Text(range,
+            style: TextStyle(
+                fontSize: 13.0,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w400)),
       ],
     );
   }

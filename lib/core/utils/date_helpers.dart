@@ -1,5 +1,3 @@
-
-
 class DateHelpers {
   static bool isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&

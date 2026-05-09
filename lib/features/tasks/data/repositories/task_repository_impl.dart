@@ -13,14 +13,20 @@ class TaskRepositoryImpl implements TaskRepository {
     final start = DateTime(date.year, date.month, date.day);
     final end = start.add(const Duration(days: 1));
 
-    final models = await isar.taskModels.where().scheduledDateBetween(start, end).findAll();
+    final models = await isar.taskModels
+        .where()
+        .scheduledDateBetween(start, end)
+        .findAll();
     return models.map((m) => m.toEntity()).toList();
   }
 
   @override
   Future<List<Task>> getTasksForWeek(DateTime startOfWeek) async {
     final end = startOfWeek.add(const Duration(days: 7));
-    final models = await isar.taskModels.where().scheduledDateBetween(startOfWeek, end).findAll();
+    final models = await isar.taskModels
+        .where()
+        .scheduledDateBetween(startOfWeek, end)
+        .findAll();
     return models.map((m) => m.toEntity()).toList();
   }
 
@@ -29,13 +35,22 @@ class TaskRepositoryImpl implements TaskRepository {
     final start = DateTime(today.year, today.month, today.day);
     final end = start.add(const Duration(days: 1));
 
-    final models = await isar.taskModels.where().scheduledDateBetween(start, end).findAll();
-    return models.where((t) => t.status != TaskStatus.completed.value).map((m) => m.toEntity()).toList();
+    final models = await isar.taskModels
+        .where()
+        .scheduledDateBetween(start, end)
+        .findAll();
+    return models
+        .where((t) => t.status != TaskStatus.completed.value)
+        .map((m) => m.toEntity())
+        .toList();
   }
 
   @override
   Future<List<Task>> getOverdueTasks() async {
-    final models = await isar.taskModels.filter().statusEqualTo(TaskStatus.overdue.value).findAll();
+    final models = await isar.taskModels
+        .filter()
+        .statusEqualTo(TaskStatus.overdue.value)
+        .findAll();
     return models.map((m) => m.toEntity()).toList();
   }
 
@@ -72,8 +87,12 @@ class TaskRepositoryImpl implements TaskRepository {
   Future<void> handleOverdueTasks() async {
     final now = DateTime.now();
     final todayStart = DateTime(now.year, now.month, now.day);
-    final tasks = (await isar.taskModels.filter().statusEqualTo(TaskStatus.pending.value).findAll())
-        .where((t) => t.scheduledDate.isBefore(todayStart)).toList();
+    final tasks = (await isar.taskModels
+            .filter()
+            .statusEqualTo(TaskStatus.pending.value)
+            .findAll())
+        .where((t) => t.scheduledDate.isBefore(todayStart))
+        .toList();
 
     await isar.writeTxn(() async {
       for (final task in tasks) {

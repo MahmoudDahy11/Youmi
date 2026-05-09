@@ -37,8 +37,7 @@ class TaskModel {
   }
 
   static TaskModel fromEntity(Task task) {
-    return TaskModel()
-      ..id = task.id
+    final model = TaskModel()
       ..title = task.title
       ..description = task.description
       ..scheduledDate = task.scheduledDate
@@ -46,5 +45,11 @@ class TaskModel {
       ..isFlexible = task.isFlexible
       ..createdAt = task.createdAt
       ..completedAt = task.completedAt;
+
+    if (task.id != 0) {
+      model.id = task.id;
+    }
+
+    return model;
   }
 }

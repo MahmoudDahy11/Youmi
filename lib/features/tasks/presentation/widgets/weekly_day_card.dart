@@ -17,8 +17,10 @@ class WeeklyDayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isToday = day.isSameDay(DateTime.now());
-    final dayTasks = tasks.where((t) => t.scheduledDate.isSameDay(day)).toList();
-    final completedCount = dayTasks.where((t) => t.status == TaskStatus.completed).length;
+    final dayTasks =
+        tasks.where((t) => t.scheduledDate.isSameDay(day)).toList();
+    final completedCount =
+        dayTasks.where((t) => t.status == TaskStatus.completed).length;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
@@ -32,13 +34,18 @@ class WeeklyDayCard extends StatelessWidget {
           count: dayTasks.length,
           completed: completedCount,
         ),
-        subtitle: Text(DateFormat('MMM d').format(day), style: const TextStyle(fontSize: 12.0, color: Colors.grey)),
+        subtitle: Text(DateFormat('MMM d').format(day),
+            style: const TextStyle(fontSize: 12.0, color: Colors.grey)),
         trailing: IconButton(
           onPressed: () => _addTask(context),
           icon: Icon(Icons.add_circle_outline, color: Colors.blue.shade600),
         ),
         children: [
-          if (dayTasks.isEmpty) _EmptyDay() else ...dayTasks.map((t) => TaskListItem(task: t, cubit: context.read<TaskCubit>())),
+          if (dayTasks.isEmpty)
+            _EmptyDay()
+          else
+            ...dayTasks.map(
+                (t) => TaskListItem(task: t, cubit: context.read<TaskCubit>())),
           const SizedBox(height: 8.0),
         ],
       ),
@@ -71,7 +78,10 @@ class _DayIcon extends StatelessWidget {
       ),
       child: Text(
         DateFormat('d').format(day),
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0, color: isToday ? Colors.blue.shade700 : Colors.grey.shade700),
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+            color: isToday ? Colors.blue.shade700 : Colors.grey.shade700),
       ),
     );
   }
@@ -83,20 +93,32 @@ class _DayTitle extends StatelessWidget {
   final int count;
   final int completed;
 
-  const _DayTitle({required this.dayName, required this.isToday, required this.count, required this.completed});
+  const _DayTitle(
+      {required this.dayName,
+      required this.isToday,
+      required this.count,
+      required this.completed});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: Text(dayName, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.0, color: isToday ? Colors.blue.shade700 : null)),
+          child: Text(dayName,
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15.0,
+                  color: isToday ? Colors.blue.shade700 : null)),
         ),
         if (count > 0)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-            decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(10.0)),
-            child: Text('$completed/$count', style: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.w500)),
+            decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10.0)),
+            child: Text('$completed/$count',
+                style: const TextStyle(
+                    fontSize: 12.0, fontWeight: FontWeight.w500)),
           ),
       ],
     );
@@ -108,7 +130,9 @@ class _EmptyDay extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.all(16.0),
-      child: Text('No tasks scheduled', style: TextStyle(fontSize: 14.0, color: Colors.grey, fontStyle: FontStyle.italic)),
+      child: Text('No tasks scheduled',
+          style: TextStyle(
+              fontSize: 14.0, color: Colors.grey, fontStyle: FontStyle.italic)),
     );
   }
 }
